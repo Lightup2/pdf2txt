@@ -26,11 +26,15 @@ def dir_pdf2txt(dir_name):
         with open(pdf_filename, 'rb') as pdfFileObj:
             pdfReader = PyPDF2.PdfReader(pdfFileObj)
             x=pdfReader.numPages
-            with open(txt_filename,"a",encoding='utf-8') as file1:
-                for i in range(x):
-                    pageobj=pdfReader.pages[i]
-                    text=pageobj.extract_text()
-                    file1.writelines(text)
+            try:
+                with open(txt_filename,"a",encoding='utf-8') as file1:
+                    for i in range(x):
+                        pageobj=pdfReader.pages[i]
+                        text=pageobj.extract_text()
+                        file1.writelines(text)
+            except:
+                with open(path_result+"异常文件.csv","a",encoding='utf-8') as file2:
+                    file2.write('%s\n' % (pdf_filename))
 
 if __name__=="__main__":
     with Pool(6) as par:
