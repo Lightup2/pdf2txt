@@ -18,23 +18,33 @@ def dir_pdf2txt(dir_name):
     path_new = path+dir_name
     dirlist = os.listdir(path_new)
     file_path = path_result + dir_name
-    os.mkdir(file_path)  
+    if os.path.isdir(file_path):
+        pass
+    else:
+        os.mkdir(file_path)  
     for j in dirlist:
-        k = j.split('.')[0]
-        pdf_filename = path+dir_name+"/"+k + '.pdf'
-        txt_filename = path_result+dir_name+"/"+k + '.txt'
-        with open(pdf_filename, 'rb') as pdfFileObj:
-            pdfReader = PyPDF2.PdfReader(pdfFileObj)
-            x=pdfReader.numPages
-            try:
-                with open(txt_filename,"a",encoding='utf-8') as file1:
-                    for i in range(x):
-                        pageobj=pdfReader.pages[i]
-                        text=pageobj.extract_text()
-                        file1.writelines(text)
-            except:
-                with open(path_result+"异常文件.csv","a",encoding='utf-8') as file2:
-                    file2.write('%s\n' % (pdf_filename))
+        namelist=j.split('.')
+        namelist[-1]="txt"
+        txt_name='.'.join(namelist)
+        # k = j.split('.')[0]
+        pdf_filename = path+dir_name+"/"+j
+        txt_filename = path_result+dir_name+"/"+txt_name
+        if os.path.isfile(txt_filename):
+            continue
+        else:
+            with open(pdf_filename, 'rb') as pdfFileObj:
+                pdfReader = PyPDF2.PdfReader(pdfFileObj)
+                x=pdfReader.numPages
+                try:
+                    with open(txt_filename,"a",encoding='utf-8') as file1:
+                        for i in range(x):
+                            pageobj=pdfReader.pages[i]
+                            text=pageobj.extract_text()
+                            file1.writelines(text)
+                except:
+                    with open(path_result+"异常文件.csv","a",encoding='utf-8') as file2:
+                        file2.write('%s\n' % (pdf_filename))
+
 
 if __name__=="__main__":
     with Pool(6) as par:

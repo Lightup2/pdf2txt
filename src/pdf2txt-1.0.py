@@ -2,8 +2,8 @@ import os
 import PyPDF2
 from multiprocessing import Pool
 from tqdm import tqdm
-path = "E:/pdf2txt/提取txt - 副本/"
-path_result = "E:/pdf2txt/完成txt/"
+path = "G:/年报/"
+path_result = "G:/年报txt/"
 os.chdir(path)#os.chdir() 方法用于改变当前工作目录到指定的路径
 dirlist = os.listdir(path)
 
@@ -48,5 +48,3 @@ if __name__=="__main__":
     with Pool(6) as par:
         for _ in tqdm(par.imap_unordered(dir_pdf2txt,dirlist) , total=len(dirlist),bar_format='{l_bar}{bar:50}{r_bar}{bar:-10b}'):
             pass
-         
-
