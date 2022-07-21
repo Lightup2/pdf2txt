@@ -2,8 +2,8 @@ import os
 import PyPDF2
 from multiprocessing import Pool
 from tqdm import tqdm
-path = "E:/pdf2txt/提取txt - 副本/"
-path_result = "E:/pdf2txt/完成txt/"
+path = "G:/年报/"
+path_result = "G:/年报txt/"
 os.chdir(path)#os.chdir() 方法用于改变当前工作目录到指定的路径
 dirlist = os.listdir(path)
 
@@ -30,15 +30,15 @@ def dir_pdf2txt(dir_name):
         else:
             pdfReader=PyPDF2.PdfReader(path_pdf_name)
             text=""
-            try:
-                for i,page in enumerate(pdfReader.pages):
+            for i,page in enumerate(pdfReader.pages):
+                try:
                     text+=page.extract_text()
-            except:
-                with open(path_result+"读取异常文件.csv","a",encoding='utf-8') as file:
-                    file.write('%s,%s\n' % (path_pdf_name,i))
-                    continue
+                except:
+                    with open(path_result+"提取异常文件及页码.csv","a",encoding='utf-8') as file:
+                        file.write('%s,%s\n' % (path_pdf_name,i))
+                        continue
             try:
-                with open(path_txt_name,"a",encoding='utf-16') as file:
+                with open(path_txt_name,"a",encoding='utf-16',errors="replace") as file:
                     file.writelines(text)
             except:
                 with open(path_result+"写入异常文件.csv","a",encoding='utf-8') as file:
@@ -48,5 +48,3 @@ if __name__=="__main__":
     with Pool(6) as par:
         for _ in tqdm(par.imap_unordered(dir_pdf2txt,dirlist) , total=len(dirlist),bar_format='{l_bar}{bar:50}{r_bar}{bar:-10b}'):
             pass
-         
-
